@@ -1,0 +1,53 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-12 px-5 px-sm-0 mx-auto">
+      <div class="row">
+        <h3 class="col-sm-10 border-box py-5">ショッピングカート</h3>
+        <div class="col-sm-2 py-5"><%= link_to "カートを空にする", destroy_all_cart_items_path, method: :delete, class: 'btn btn-danger' %>
+        </div>
+      </div>
+      <div class="col-lg-12 px-5 px-sm-0 mx-auto">
+        <table class="table table-hover tabel-inverse col-lg-12 ">
+          <thead class="">
+            <tr>
+              <th class="col-lg-4 border border-dark">商品名</th>
+              <th class="col-lg-2 border border-dark">単価（税込）</th>
+              <th class="col-lg-2 border border-dark">数量</th>
+              <th class="col-lg-2 border border-dark">小計</th>
+              <th class="col-lg-2 border border-dark"></th>
+            </tr>
+          </thead>
+          <% @cart_items.each do |cart_item| %> 
+          <tbody class="border border-dark">
+            <tr>
+              <td class="border border-dark"><%= image_tag cart_item.item.get_image(50,50) %> <%= cart_item.item.name %></td>
+              <td class="border border-dark"><%= number_to_currency((cart_item.item.price * (1 + 0.1)).floor, unit: "", delimiter: ',', precision:0) %></td>
+              <td class="border border-dark">
+                <%= form_with(model: cart_item, url: update_cart_item_path(cart_item), method: :patch) do |f| %>
+                  <%= f.select :amount, options_for_select(1..10, cart_item.amount)%>
+                  <%= f.submit "変更", class: 'btn btn-success ml-4' %>
+        　　      <% end %>
+              </td>
+              <td class="border border-dark"><%= number_to_currency((cart_item.item.price * (1 + 0.1)).floor * cart_item.amount, unit: "", delimiter: ',', precision:0) %></td>
+              <td class="border border-dark"><%= link_to "削除する", destroy_cart_items_path(cart_item), method: :delete, class: 'btn btn-danger' %></td>
+            </tr>
+          </tbody>
+         <% end %>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-sm-8 py-5"><%= link_to "買い物を続ける", top_page_path, class: 'btn btn-primary' %></div>
+        <div class="col-sm-2 my-5 border border-dark bg-light d-flex align-items-center">合計金額</div>
+        <div class="col-sm-2 my-5 border border-dark d-flex align-items-center"><%= number_to_currency(@total, unit: "", delimiter: ',', precision:0,) %></div>
+      </div>
+      <div class="d-flex justify-content-center">
+        <% if @cart_items.empty? %>
+          
+        <% else %>
+          <%= link_to '情報入力に進む', new_public_order_path, class: 'btn btn-success' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

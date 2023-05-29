@@ -4,15 +4,31 @@
     <div class="col-sm-12 col-md-8 col-lg-12 px-5 px-sm-0 mx-auto">
       <h3 class="border-box py-5">注文履歴一覧</h3>
       <div class="col-lg-12 px-5 px-sm-0 mx-auto">
-        <table class="table table-hover tabel-inverse col-lg-12">
+        <table class="table table-hover tabel-inverse col-lg-11">
           <thead>
             <tr>
-              <th>購入日時</th>
-              <th>購入者</th>
-              <th>注文個数</th>
-              <th>注文ステータス</th>
+              <th class="col-lg-3">購入日時</th>
+              <th class="col-lg-2">購入者</th>
+              <th class="col-lg-2">注文個数</th>
+              <th class="col-lg-4">注文ステータス</th>
             </tr>
           </thead>
+          <% @orders.each do |order| %> 
+          <tbody class="">
+            <tr>
+              <th><%= link_to order.created_at.strftime('%Y/%m/%d %H:%M:%S'), edit_admin_order_path(order)  %></th>
+              <th><%= order.customer.last_name %> <%= order.customer.first_name %></th>
+              <th>
+                <% total = 0 %>
+                <% order.order_details.each do |order_detail| %> 
+                  <% total += order_detail.amount %>
+                <% end %>
+                <%= total %>
+              </th>
+              <th><%= order.status_i18n %></th>
+            </tr>
+          </tbody>
+          <% end %>
       </div>
     </div>
   </div>

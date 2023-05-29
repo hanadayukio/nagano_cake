@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-12 px-5 px-sm-0 mx-auto">
+      <h3 class="border-box py-5">注文履歴詳細</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2">
+      <div class="font-weight-bold">購入者</div></br>
+      <div class="font-weight-bold">注文日</div></br>
+      <div class="font-weight-bold">配送先</div></br>
+      </br>
+      <div class="font-weight-bold">支払方法</div></br>
+      <div class="font-weight-bold">注文ステータス</div></br>
+    </div>
+    <div class="col-lg-10">
+      <div><%= link_to "#{@order.customer.last_name} #{@order.customer.first_name}",
+              admin_customer_path(@order) %></div></br>
+      <div><%= @order.created_at.strftime('%Y/%m/%d') %></div></br>
+      <div>〒 <%= @order.postal_code %> <%= @order.address %></br>
+      <%= @order.name %></div></br>
+      <div><%= @order.payment_method_i18n %></div></br>
+      <div>
+        <%= form_with(model: @order, url: admin_order_path(@order), method: :patch) do |f| %>
+          <%= f.select :status, options_for_select([["入金待ち", "payment_pending"],["入金確認", "payment_confirmed"],["製作中", "in_production"],["発送準備中", "reparing_for_shipping"],["発送済み", "shipped"]], @order.status) %>
+          <%= f.submit "更新", class: 'btn btn-success ml-4' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-9 col-md-9 col-lg-9 px-5 px-sm-0">
+      <table class="table table-hover tabel-inverse col-lg-12 ">
+        <thead class="">
+          <tr>
+            <th class="col-lg-4">商品名</th>
+            <th class="col-lg-2">単価(税込)</th>
+            <th class="col-lg-1">数量</th>
+            <th class="col-lg-1">小計</th>
+            <th class="col-lg-4">製作ステータス</th>
+          </tr>
+        </thead>
+      <% @order.order_details.each do |order_detail| %>
+        <tbody class="">
+          <tr>
+            <td class=""><%= order_detail.item.name %></td>
+            <td class=""><%= number_to_currency(order_detail.price, unit: "", delimiter: ',', precision:0) %></td>
+            <td class=""><%= order_detail.amount %></td>
+            <td class=""><%= number_to_currency((order_detail.price * order_detail.amount), unit: "", delimiter: ',', precision:0)%></td>
+            <%= form_with(model: order_detail, url: admin_orders_detail_path(order_detail), method: :patch) do |f| %>
+            <td class="">
+              <%= f.select :making_status, options_for_select([["製作不可", "not_makable"],["製作待ち", "waiting_for_production"],["製作中", "in_production"],["製作完了", "production_completed"]], order_detail.making_status) %>
+              <%= f.submit "更新", class: 'btn btn-success ml-4' %>
+            </td>
+            <% end %>
+          </tr>
+        </tbody>
+      <% end %>
+      </table>
+    </div>
+    <div class="col-sm-3 col-md-3 col-lg-3 px-5 px-sm-0 mt-5">
+      <div class="row">
+        <div class="col-lg-5 font-weight-bold ml-3">
+          <div>商品合計</div></br>
+          <div>送料</div></br>
+          <div>請求金額合計</div>
+        </div class="col-lg-5">
+        <div>
+          <div><%= number_to_currency(@total, unit: "", delimiter: ',', precision:0) %>円</div></br>
+          <div><%= number_to_currency(@order.postage, unit: "", delimiter: ',', precision:0) %>円</div></br>
+          <div><%= number_to_currency(@order.billing_amount, unit: "", delimiter: ',', precision:0) %>円</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

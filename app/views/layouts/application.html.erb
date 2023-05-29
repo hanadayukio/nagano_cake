@@ -18,7 +18,20 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-            <% if admin_signed_in? %>
+            <% if customer_signed_in? %>
+            <li class="nav-item pr-4">
+              <button type="button" class="btn btn-light btn-sm"><%= link_to"マイページ", home_path, class: 'nav-link text-dark'  %></button>
+            </li>
+            <li class="nav-item pr-4">
+              <button type="button" class="btn btn-light btn-sm"><%= link_to"商品一覧" ,public_items_path, class: 'nav-link text-dark' %></button>
+            </li>
+            <li class="nav-item pr-4">
+              <button type="button" class="btn btn-light btn-sm"><%= link_to"カート",cart_items_path, class: 'nav-link text-dark' %></button>
+            </li>
+            <li class="nav-item pr-4">
+              <button type="button" class="btn btn-light btn-sm"><%= link_to"ログアウト",destroy_customer_session_path, method: :delete, class: 'nav-link text-dark' %></button>
+            </li>
+            <% elsif admin_signed_in? %>
             <li class="nav-item pr-4">
               <button type="button" class="btn btn-light btn-sm"><%= link_to"商品一覧" ,admin_items_path, class: 'nav-link text-dark' %></button>
             </li>
@@ -34,25 +47,12 @@
             <li class="nav-item pr-4">
               <button type="button" class="btn btn-light btn-sm"><%= link_to"ログアウト",destroy_admin_session_path, method: :delete, class: 'nav-link text-dark' %></button>
             </li>
-            <% elsif customer_signed_in? %>
-            <li class="nav-item pr-4">
-              <button type="button" class="btn btn-light btn-sm"><%= link_to"マイページ", new_admin_session_path, class: 'nav-link text-dark'  %></button>
-            </li>
-            <li class="nav-item pr-4">
-              <button type="button" class="btn btn-light btn-sm"><%= link_to"商品一覧" ,new_admin_session_path, class: 'nav-link text-dark' %></button>
-            </li>
-            <li class="nav-item pr-4">
-              <button type="button" class="btn btn-light btn-sm"><%= link_to"カート",new_admin_session_path, class: 'nav-link text-dark' %></button>
-            </li>
-            <li class="nav-item pr-4">
-              <button type="button" class="btn btn-light btn-sm"><%= link_to"ログアウト",destroy_customer_session_path, method: :delete, class: 'nav-link text-dark' %></button>
-            </li>
             <% else %>
             <li class="nav-item pr-4">
               <button type="button" class="btn btn-light btn-sm"><%= link_to"About", about_path, class: 'nav-link text-dark'  %></button>
             </li>
             <li class="nav-item pr-4">
-              <button type="button" class="btn btn-light btn-sm"><%= link_to"商品一覧" ,new_admin_session_path, class: 'nav-link text-dark' %></button>
+              <button type="button" class="btn btn-light btn-sm"><%= link_to"商品一覧" ,public_items_path, class: 'nav-link text-dark' %></button>
             </li>
             <li class="nav-item pr-4">
               <button type="button" class="btn btn-light btn-sm"><%= link_to"新規登録",new_customer_registration_path, class: 'nav-link text-dark' %></button>
